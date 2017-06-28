@@ -1,6 +1,5 @@
 package lt.andro.androidthingsdemo1
 
-import android.app.Activity
 import android.os.Bundle
 import android.util.Log
 import com.google.android.things.pio.Gpio
@@ -31,7 +30,7 @@ import lt.andro.androidthingsdemo1.mvp.MainView
 
  * @see [https://github.com/androidthings/contrib-drivers.readme](https://github.com/androidthings/contrib-drivers.readme)
  */
-class MainActivity : Activity(), MainView {
+class MainActivity : BaseActivity(), MainView {
     private val TAG = "MainActivity"
     private val LED_GPIO = "BCM6"
     val presenter: MainPresenter by lazy { MainPresenterImpl(this) }
@@ -54,7 +53,12 @@ class MainActivity : Activity(), MainView {
         presenter.onDetach()
     }
 
-    override fun setLedValue(value: Boolean) {
-        mLedGpio.value = value
+    override fun switchLed(isOn: Boolean) {
+        mLedGpio.value = isOn
+    }
+
+    override fun isLedOn(): Boolean {
+        return mLedGpio.value
     }
 }
+
