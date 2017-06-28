@@ -2,11 +2,12 @@ package lt.andro.androidthingsdemo1
 
 import android.app.Activity
 import android.os.Bundle
-import android.os.Handler
 import android.util.Log
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManagerService
-import java.util.*
+import lt.andro.androidthingsdemo1.mvp.MainPresenter
+import lt.andro.androidthingsdemo1.mvp.MainPresenterImpl
+import lt.andro.androidthingsdemo1.mvp.MainView
 
 
 /**
@@ -30,22 +31,30 @@ import java.util.*
 
  * @see [https://github.com/androidthings/contrib-drivers.readme](https://github.com/androidthings/contrib-drivers.readme)
  */
-class MainActivity : Activity() {
+class MainActivity : Activity(), MainView {
     private val TAG = "MainActivity"
     private val LED_GPIO = "BCM6"
+    val presenter: MainPresenter by lazy { MainPresenterImpl(this) }
 
-    private val handler = Handler()
     private var mLedGpio: Gpio = PeripheralManagerService().openGpio(LED_GPIO)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "Configuring GPIO pins")
         mLedGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW)
-        setLedValue();
     }
 
-    private fun setLedValue() {
-        mLedGpio.value = !mLedGpio.value
-        handler.postDelayed({ setLedValue() }, 100 + Random().nextInt(500).toLong());
+    override fun onResume() {
+        super.onResume()
+        presenter.onAttach()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onDetach()
+    }
+
+    override fun setLedValue(value: Boolean) {
+        mLedGpio.value = value
     }
 }
