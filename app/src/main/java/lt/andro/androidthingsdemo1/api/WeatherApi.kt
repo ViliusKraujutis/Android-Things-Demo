@@ -8,10 +8,7 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Query
-import rx.Observable
-
-
-
+import rx.Single
 
 /**
  * @author Vilius Kraujutis
@@ -20,8 +17,7 @@ import rx.Observable
 interface OpenWeatherMapApi {
 
     @GET("/data/2.5/forecast")
-    fun getForecast(@Query("id") city: Int = 593116, @Query("appid") appId: String = APP_ID): Observable<Forecast>
-
+    fun getForecast(@Query("id") city: Int = 593116, @Query("appid") appId: String = APP_ID): Single<Forecast>
 
     companion object RestApi {
         val api: OpenWeatherMapApi by lazy { create() }
@@ -38,7 +34,6 @@ interface OpenWeatherMapApi {
                     .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                     .client(client)
                     .addConverterFactory(GsonConverterFactory.create())
-//                    .addConverterFactory(MoshiConverterFactory.create())
                     .build()
 
             return retrofit.create<OpenWeatherMapApi>(OpenWeatherMapApi::class.java)

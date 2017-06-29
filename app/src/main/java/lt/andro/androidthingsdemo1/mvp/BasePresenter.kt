@@ -9,16 +9,20 @@ interface BasePresenter {
 }
 
 open class BasePresenterImpl : BasePresenter {
-    private val compositeDisposable: CompositeSubscription = CompositeSubscription()
+    private val compositeSubscription: CompositeSubscription = CompositeSubscription()
 
-    fun add(subscribe: Subscription) {
-        compositeDisposable.add(subscribe)
+    fun add(subscribe: Subscription?) {
+        subscribe?.let { compositeSubscription.add(it) }
     }
 
     override fun onAttach() {}
 
     override fun onDetach() {
-        compositeDisposable.clear()
+        clearSubscriptions()
+    }
+
+    fun clearSubscriptions() {
+        compositeSubscription.clear()
     }
 
 }
