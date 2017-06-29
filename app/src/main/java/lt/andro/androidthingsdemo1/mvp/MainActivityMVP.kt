@@ -30,7 +30,6 @@ class MainPresenterImpl(val view: MainView) : BasePresenterImpl(), MainPresenter
         add(api.getForecast()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { flashLed(50) }
                 .doOnSuccess({
                     val mostRain = it.list?.take(5)?.map { Pair(it, it.rain?.period3h) }?.maxBy { it.second ?: 0.0 }?.first
                     Log.d("Forecast", "Weather forecast is $mostRain in Vilnius")
@@ -38,13 +37,13 @@ class MainPresenterImpl(val view: MainView) : BasePresenterImpl(), MainPresenter
                     val rain = mostRain!!.rain!!.period3h ?: 0.0
 
                     when (rain) {
-                        in 0.0..0.3 -> flashLed(100)
-                        in 0.3..1.5 -> flashLed(500)
-                        else -> flashLed(800)
+                        in 0.0..0.3 -> flashLed(100, 500)
+                        in 0.3..1.5 -> flashLed(500, 500)
+                        else -> flashLed(800, 100)
                     }
                 })
                 .doOnError({
-                    flashLed(300)
+                    flashLed(300, 300)
                     it.printStackTrace()
                 })
                 .toCompletable()
@@ -55,23 +54,27 @@ class MainPresenterImpl(val view: MainView) : BasePresenterImpl(), MainPresenter
     }
 
     private var flashHeartBeat: Subscription? = null
-    private fun flashLed(speed: Long) {
+    private fun flashLed(on: Long, off: Long) {
+        val gcd = gcd(on, off)
         flashHeartBeat?.unsubscribe()
         flashHeartBeat = Observable
-                .interval(500, speed, TimeUnit.MILLISECONDS)
+                .interval(500, gcd, TimeUnit.MILLISECONDS)
                 .doOnNext {
-                    println("flashLed $this : $it")
-                    toggleLed()
+                    val repeatedTime = (it * gcd) % (on + off)
+
+                    val isOnNow = repeatedTime < on
+                    setLedValue(isOnNow)
+                    println("flashLed $this : $it :  $repeatedTime : $isOnNow")
                 }
                 .subscribe()
 
         add(flashHeartBeat)
     }
 
-    private fun toggleLed() {
-        val isOnNow = !view.isLedOn()
-        println("$this LED now is ${if (isOnNow) "ON" else "OFF"}")
-        setLedValue(isOnNow)
+    // Greatest Common Divider
+    fun gcd(a: Long, b: Long): Long {
+        if (b == 0L) return a
+        return gcd(b, a % b)
     }
 
     private fun reloadWeatherData(delay: Long) {
