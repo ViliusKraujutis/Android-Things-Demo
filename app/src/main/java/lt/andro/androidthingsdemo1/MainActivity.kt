@@ -2,8 +2,10 @@ package lt.andro.androidthingsdemo1
 
 import android.os.Bundle
 import android.util.Log
+import com.crashlytics.android.Crashlytics
 import com.google.android.things.pio.Gpio
 import com.google.android.things.pio.PeripheralManagerService
+import io.fabric.sdk.android.Fabric
 import lt.andro.androidthingsdemo1.mvp.MainPresenter
 import lt.andro.androidthingsdemo1.mvp.MainPresenterImpl
 import lt.andro.androidthingsdemo1.mvp.MainView
@@ -41,6 +43,7 @@ class MainActivity : BaseActivity(), MainView {
         super.onCreate(savedInstanceState)
         Log.i(TAG, "Configuring GPIO pins")
         mLedGpio.setDirection(Gpio.DIRECTION_OUT_INITIALLY_LOW)
+        Fabric.with(this, Crashlytics())
     }
 
     override fun onResume() {

@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "651131047504",
+    "firebase_url": "https://androidthingsdemo-340c8.firebaseio.com",
+    "project_id": "androidthingsdemo-340c8",
+    "storage_bucket": "androidthingsdemo-340c8.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:651131047504:android:6ef362a2fb9a16ed",
+        "android_client_info": {
+          "package_name": "lt.andro.androidthingsdemo1"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "651131047504-g0q8jq0su3rrjf67l4bbohj8stnoqjg5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDOqE8UsrdD_ZJP9vBA_vbmiCIR8I9vkA"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

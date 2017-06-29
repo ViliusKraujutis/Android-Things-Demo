@@ -9,6 +9,11 @@
         <uses-library android:name="com.google.android.things"/>
 
 
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="88982b0b2fc93b0741b421bcbf4c184a80952d49"
+            />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
